@@ -1,14 +1,15 @@
-# frontend-react/Dockerfile
-FROM node:18-alpine
+FROM node:16-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# Копируем только package.json сначала для использования кэша
+COPY frontend/package*.json ./
 
+# Устанавливаем зависимости
 RUN npm install
 
-COPY . .
+# Устанавливаем отдельно нужные пакеты
+RUN npm install react-router-dom formik yup axios --save
 
-EXPOSE 3000
-
+# Запускаем приложение
 CMD ["npm", "start"]
