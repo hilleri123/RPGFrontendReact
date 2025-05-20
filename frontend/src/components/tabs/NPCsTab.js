@@ -52,16 +52,25 @@ const NPCsTab = ({ scenarioId }) => {
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
+      // Создаем FormData для отправки данных
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('story', values.story || '');
+      formData.append('body_id', values.body_id);
+      formData.append('scenario_id', scenarioId);
+      
       if (editId) {
-        await axios.put(`/api/npcs/${editId}`, {
-          ...values,
-          body_id: parseInt(values.body_id)
+        await axios.put(`/api/npcs/${editId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
         setEditId(null);
       } else {
-        await axios.post('/api/npcs/', {
-          ...values,
-          body_id: parseInt(values.body_id)
+        await axios.post('/api/npcs/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
       }
       
@@ -72,6 +81,7 @@ const NPCsTab = ({ scenarioId }) => {
       setError('Не удалось сохранить NPC');
     }
   };
+  
 
   const handleEdit = (npc) => {
     setEditId(npc.id);

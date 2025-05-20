@@ -63,17 +63,31 @@ const PlayerCharactersTab = ({ scenarioId }) => {
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
-      const formData = {
-        ...values,
-        body_id: parseInt(values.body_id),
-        location_id: values.location_id ? parseInt(values.location_id) : null
-      };
+      // Создаем FormData для отправки данных
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('short_desc', values.short_desc || '');
+      formData.append('story', values.story || '');
+      formData.append('body_id', values.body_id);
+      formData.append('scenario_id', scenarioId);
+      
+      if (values.location_id) {
+        formData.append('location_id', values.location_id);
+      }
       
       if (editId) {
-        await axios.put(`/api/player-characters/${editId}`, formData);
+        await axios.put(`/api/player-characters/${editId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
         setEditId(null);
       } else {
-        await axios.post('/api/player-characters/', formData);
+        await axios.post('/api/player-characters/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       }
       
       resetForm();
@@ -83,6 +97,7 @@ const PlayerCharactersTab = ({ scenarioId }) => {
       setError('Не удалось сохранить персонажа');
     }
   };
+  
 
   const handleEdit = (character) => {
     setEditId(character.id);
