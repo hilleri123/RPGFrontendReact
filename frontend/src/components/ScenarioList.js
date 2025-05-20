@@ -63,6 +63,10 @@ const ScenarioList = () => {
               <p>{scenario.intro ? scenario.intro.substring(0, 100) + '...' : 'Нет описания'}</p>
               <p>Игроков: {scenario.max_players || 'Не указано'}</p>
               <div className="scenario-actions">
+                {/* Добавляем кнопку для перехода к деталям сценария */}
+                <Link to={`/scenarios/${scenario.id}/details`} className="btn btn-primary">
+                  Управление элементами
+                </Link>
                 <Link to={`/scenarios/edit/${scenario.id}`} className="btn btn-edit">
                   Редактировать
                 </Link>
